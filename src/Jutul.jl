@@ -23,6 +23,8 @@ module Jutul
     using LinearOperators
     using Krylov
     using AlgebraicMultigrid
+    # Infiltrator for debugging
+    using Infiltrator
 
     # Misc. utils
     using ExprTools
