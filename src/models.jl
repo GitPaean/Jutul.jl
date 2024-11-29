@@ -696,6 +696,7 @@ end
 Update the model equations and apply boundary conditions and forces. Does not fill linearized system.
 """
 function update_equations_and_apply_forces!(storage, model, dt, forces; time = NaN, kwarg...)
+    @infiltrate
     @tic "equations" update_equations!(storage, model, dt; kwarg...)
     @tic "forces" apply_forces!(storage, model, dt, forces; time = time, kwarg...)
     @tic "boundary conditions" apply_boundary_conditions!(storage, model; kwarg...)
@@ -718,6 +719,7 @@ function update_equations!(storage, model, dt = nothing)
 end
 
 function update_equations!(storage, equations_storage, equations, model, dt)
+    @infiltrate
     for (key, eq) in pairs(equations)
         @tic "$key" update_equation!(equations_storage[key], eq, storage, model, dt)
     end

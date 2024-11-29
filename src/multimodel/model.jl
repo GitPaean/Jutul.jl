@@ -564,27 +564,29 @@ function initialize_storage!(storage, model::MultiModel; kwarg...)
 end
 
 function update_equations!(storage, model::MultiModel, dt; targets = submodels_symbols(model))
+    @infiltrate
     @tic "model equations" for k in targets
         update_equations!(storage[k], model[k], dt)
     end
 end
 
 function update_equations_and_apply_forces!(storage, model::MultiModel, dt, forces; time = NaN, kwarg...)
+    @infiltrate
     # First update all equations
     # @tic "equations" update_equations!(storage, model, dt; kwarg...)
     update_equations!(storage, model, dt; kwarg...)
     # Then update the cross terms
-    # @tic "crossterm update" update_cross_terms!(storage, model, dt; kwarg...)
-    update_cross_terms!(storage, model, dt; kwarg...)
+    @infiltrate
+    @tic "crossterm update" update_cross_terms!(storage, model, dt; kwarg...)
     # Apply forces
-    # @tic "forces" apply_forces!(storage, model, dt, forces; time = time, kwarg...)
-    apply_forces!(storage, model, dt, forces; time = time, kwarg...)
+    @infiltrate
+    @tic "forces" apply_forces!(storage, model, dt, forces; time = time, kwarg...)
     # Boundary conditions
     # @tic "boundary conditions" apply_boundary_conditions!(storage, model; kwarg...)
     apply_boundary_conditions!(storage, model; kwarg...)
     # Apply forces to cross-terms
-    # @tic "crossterm forces" apply_forces_to_cross_terms!(storage, model, dt, forces; time = time, kwarg...)
-    apply_forces_to_cross_terms!(storage, model, dt, forces; time = time, kwarg...)
+    @infiltrate
+    @tic "crossterm forces" apply_forces_to_cross_terms!(storage, model, dt, forces; time = time, kwarg...)
 end
 
 function update_cross_terms!(storage, model::MultiModel, dt; targets = submodels_symbols(model), sources = submodels_symbols(model))
@@ -818,18 +820,21 @@ function setup_forces(model::MultiModel; kwarg...)
 end
 
 function update_secondary_variables!(storage, model::MultiModel, is_state0::Bool; targets = submodels_symbols(model))
+    @infiltrate
     for key in targets
         update_secondary_variables!(storage[key], model.models[key], is_state0)
     end
 end
 
 function update_secondary_variables!(storage, model::MultiModel; targets = submodels_symbols(model))
+    @infiltrate
     for key in targets
         update_secondary_variables!(storage[key], model.models[key])
     end
 end
 
 function update_secondary_variables_state!(state, model::MultiModel; targets = submodels_symbols(model))
+    @infiltrate
     for key in targets
         update_secondary_variables_state!(state[key], model[key])
     end

@@ -518,6 +518,7 @@ function update_equation!(eq_s, eq::JutulEquation, storage, model, dt)
     for i in 1:number_of_entities(model, eq)
         prepare_equation_in_entity!(i, eq, eq_s, state, state0, model, dt)
     end
+    @infiltrate
     if eq_s isa AbstractArray
         update_equation_for_entity!(eq_s, eq, state, state0, model, dt)
     else
@@ -538,6 +539,7 @@ function update_equation_for_entity!(cache, eq, state, state0, model, dt)
     local_state = local_ad(state, 1, T)
     local_state0 = local_ad(state0, 1, T)
     inner_update_equation_for_entity(cache, eq, local_state, local_state0, model, dt)
+    @infiltrate
 end
 
 function update_equation_for_entity!(cache::AbstractMatrix, eq, state, state0, model, dt)
