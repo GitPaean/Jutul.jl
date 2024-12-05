@@ -571,15 +571,20 @@ end
 
 function update_equations_and_apply_forces!(storage, model::MultiModel, dt, forces; time = NaN, kwarg...)
     # First update all equations
-    @tic "equations" update_equations!(storage, model, dt; kwarg...)
+    # @tic "equations" update_equations!(storage, model, dt; kwarg...)
+    update_equations!(storage, model, dt; kwarg...)
     # Then update the cross terms
-    @tic "crossterm update" update_cross_terms!(storage, model, dt; kwarg...)
+    # @tic "crossterm update" update_cross_terms!(storage, model, dt; kwarg...)
+    update_cross_terms!(storage, model, dt; kwarg...)
     # Apply forces
-    @tic "forces" apply_forces!(storage, model, dt, forces; time = time, kwarg...)
+    # @tic "forces" apply_forces!(storage, model, dt, forces; time = time, kwarg...)
+    apply_forces!(storage, model, dt, forces; time = time, kwarg...)
     # Boundary conditions
-    @tic "boundary conditions" apply_boundary_conditions!(storage, model; kwarg...)
+    # @tic "boundary conditions" apply_boundary_conditions!(storage, model; kwarg...)
+    apply_boundary_conditions!(storage, model; kwarg...)
     # Apply forces to cross-terms
-    @tic "crossterm forces" apply_forces_to_cross_terms!(storage, model, dt, forces; time = time, kwarg...)
+    # @tic "crossterm forces" apply_forces_to_cross_terms!(storage, model, dt, forces; time = time, kwarg...)
+    apply_forces_to_cross_terms!(storage, model, dt, forces; time = time, kwarg...)
 end
 
 function update_cross_terms!(storage, model::MultiModel, dt; targets = submodels_symbols(model), sources = submodels_symbols(model))
@@ -594,7 +599,8 @@ function update_cross_terms!(storage, model::MultiModel, dt; targets = submodels
             model_t = models[target]
             eq = ct_equation(model_t, ctp.target_equation)
             ct_bare_type = Base.typename(typeof(ct)).name
-            @tic "$ct_bare_type" update_cross_term!(ct_s, ct, eq, storage[target], storage[source], model_t, models[source], dt)
+            # @tic "$ct_bare_type" update_cross_term!(ct_s, ct, eq, storage[target], storage[source], model_t, models[source], dt)
+            update_cross_term!(ct_s, ct, eq, storage[target], storage[source], model_t, models[source], dt)
         end
     end
 end
