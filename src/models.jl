@@ -258,11 +258,11 @@ Initialize primary variables and other state fields, given initial values as a D
 """
 function setup_state!(state, model::JutulModel, init_values::AbstractDict = Dict())
     for (psym, pvar) in get_primary_variables(model)
-        println("Primary Variable - Symbol: ", psym, ", Variable: ", pvar)
+#        println("Primary Variable - Symbol: ", psym, ", Variable: ", pvar)
         initialize_variable_value!(state, model, pvar, psym, init_values, need_value = true)
     end
     for (psym, svar) in get_secondary_variables(model)
-        println("Secondary Variable - Symbol: ", psym, ", Variable: ", svar)
+#        println("Secondary Variable - Symbol: ", psym, ", Variable: ", svar)
         initialize_variable_value!(state, model, svar, psym, init_values, need_value = false)
     end
     initialize_extra_state_fields!(state, model)
