@@ -1,5 +1,6 @@
 export sort_secondary_variables!, build_variable_graph
 export @jutul_secondary
+using InteractiveUtils
 
 """
 Designate the function as updating a secondary variable.
@@ -115,9 +116,19 @@ function update_secondary_variables_state!(state, model, vars = model.secondary_
         if N_batches == 1
             for (symbol, var) in var_pairs
                 @tic "$symbol" begin
+               #     if symbol == :TotalMasses
+               #         @infiltrate
+               #     end
                     v = state[symbol]
                     ix = entity_eachindex(v)
+                    if K == 1
+                        @which update_secondary_variable!(v, var, model, state, ix)
+                    end
                     update_secondary_variable!(v, var, model, state, ix)
+               #     if symbol == :TotalMasses
+                    if K == 1
+                        @infiltrate
+                    end
                 end
             end
         else

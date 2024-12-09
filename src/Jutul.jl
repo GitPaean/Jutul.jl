@@ -25,6 +25,7 @@ module Jutul
     using AlgebraicMultigrid
     # Infiltrator for debugging
     using Infiltrator
+    using InteractiveUtils
 
     # Misc. utils
     using ExprTools
